@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="4a487f1e-36bd-4649-b60a-5c87338ec67c" name="chess-diagram.kpf" kpf_version="3">
+<preference-set idref="4a487f1e-36bd-4649-b60a-5c87338ec67c">
+  <boolean id="import_live">1</boolean>
+</preference-set>
+</project>
