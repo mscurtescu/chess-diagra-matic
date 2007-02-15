@@ -48,11 +48,11 @@ function placePieces($board, $set)
     
     $background = 'w';
     
-    $offy = $set->getBoardOffsety();
+    $offy = $set->getMarginTop();
     
     foreach ($rows as $row)
     {
-        $offx = $set->getBoardOffsetX();
+        $offx = $set->getMarginLeft();
         
         foreach ($cols as $col)
         {

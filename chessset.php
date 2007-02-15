@@ -5,10 +5,13 @@ class ChessSet
     var $boardImg;
     var $pieces = array();
     var $folder;
+    var $info;
     
     function ChessSet($setFolder = 'default')
     {
         $this->folder = $setFolder . '/';
+        
+        $this->info = parse_ini_file($this->folder . "set.info");
     }
     
     function getBoard()
@@ -35,17 +38,37 @@ class ChessSet
     
     function getSquareSize()
     {
-        return 32;
+        return intval($this->info['square_size']);
     }
     
-    function getBoardOffsetX()
+    function getMarginLeft()
     {
-        return 6;
+        return intval($this->info['margin_left']);
     }
     
-    function getBoardOffsetY()
+    function getMarginRigh()
     {
-        return 6;
+        return intval($this->info['margin_right']);
+    }
+    
+    function getMarginTop()
+    {
+        return intval($this->info['margin_top']);
+    }
+    
+    function getMarginBottom()
+    {
+        return intval($this->info['margin_bottom']);
+    }
+    
+    function getBoardWidth()
+    {
+        return $this->getMarginLeft() + $this->getSquareSize() * 8 + $this->getMarginRigh();
+    }
+    
+    function getBoardHeight()
+    {
+        return $this->getMarginTop() + $this->getSquareSize() * 8 + $this->getMarginBottom();
     }
 }
 

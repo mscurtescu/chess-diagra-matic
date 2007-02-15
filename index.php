@@ -1,8 +1,108 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>Chess Diagram Creator</title>
-    <link rel="stylesheet" type="text/css" href="chessdiagram.css" />
+    <title>Chess-Diagra-Matic</title>
+    <?php
+    require('chessset.php');
+    
+    $setName = 'default';
+    $set = new ChessSet($setName);
+    ?>
+    <style type="text/css">
+        #white-pieces
+        {
+            margin: <?=$set->getMarginLeft()?>px 0 0 0;
+            padding: 0;
+            width: <?=$set->getBoardWidth()?>px;
+            height: <?=$set->getSquareSize()?>px;
+            position: relative;
+        }
+        
+        #black-pieces
+        {
+            margin: 0 0 <?=$set->getMarginLeft()?>px 0;
+            padding: 0;
+            width: <?=$set->getBoardWidth()?>px;
+            height: <?=$set->getSquareSize()?>px;
+            position: relative;
+        }
+        
+        #white-pieces img, #black-pieces img
+        {
+            margin: 0;
+            width: <?=$set->getSquareSize()?>px;
+            height: <?=$set->getSquareSize()?>px;
+        }
+        
+<?php
+    $left = $set->getMarginLeft();
+    
+    foreach (array('K', 'Q', 'B', 'N', 'R', 'P') as $pieceCode)
+    {
+        $left += $set->getSquareSize();
+?>
+        #w<?=$pieceCode?>, #b<?=$pieceCode?>
+        
+        {
+            position: absolute;
+            top: 0;
+            left: <?=$left?>px;
+        }
+        
+<?php } ?>
+        
+        #board
+        {
+            position: relative;
+            padding: 0;
+            margin: 0;
+            width: <?=$set->getBoardWidth()?>px;
+            height: <?=$set->getBoardWidth()?>px;
+            background-image: url(<?=$setName?>/board.png);
+        }
+        
+<?php
+    $left = $set->getMarginLeft();
+    
+    foreach (array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h') as $col)
+    {
+?>
+        .c<?=$col?>
+        
+        {
+            position: absolute;
+            left: <?=$left?>px;
+            width: <?=$set->getSquareSize()?>px;
+            height: <?=$set->getSquareSize()?>px;
+        }
+        
+<?php
+        $left += $set->getSquareSize();
+    }
+?>
+        
+<?php
+    $top = $set->getMarginTop();
+    
+    for ($row = 8; $row >= 1; $row--)
+    {
+?>
+        .r<?=$row?>
+        
+        {
+            top: <?=$top?>px;
+        }
+        
+<?php
+        $top += $set->getSquareSize();
+    }
+?>
+        
+        .hover-cell
+        {
+            border: 1px solid red;
+        }
+    </style>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/iutil.js"></script>
     <script type="text/javascript" src="js/idrag.js"></script>
@@ -103,9 +203,10 @@
     );
     </script>
 </head>
+
 <body>
     
-    <h1>Chess Diagram Creator</h1>
+    <h1>Chess-Diagra-Matic</h1>
     
     <form action="chessdiagram.php" method="get">
         <table>
@@ -126,12 +227,12 @@
     <div id="drag-drop-area">
         
         <div id="black-pieces">
-            <img id="bK" class="draggable" src="default/wbK.png" alt="Black King" title="Black King" />
-            <img id="bQ" class="draggable" src="default/wbQ.png" alt="Black Queen" title="Black Queen" />
-            <img id="bB" class="draggable" src="default/wbB.png" alt="Black Bishop" title="Black Bishop" />
-            <img id="bN" class="draggable" src="default/wbN.png" alt="Black Knight" title="Black Knight" />
-            <img id="bR" class="draggable" src="default/wbR.png" alt="Black Rook" title="Black Rook" />
-            <img id="bP" class="draggable" src="default/wbP.png" alt="Black Pawn" title="Black Pawn" />
+            <img id="bK" class="draggable" src="<?=$setName?>/wbK.png" alt="Black King" title="Black King" />
+            <img id="bQ" class="draggable" src="<?=$setName?>/wbQ.png" alt="Black Queen" title="Black Queen" />
+            <img id="bB" class="draggable" src="<?=$setName?>/wbB.png" alt="Black Bishop" title="Black Bishop" />
+            <img id="bN" class="draggable" src="<?=$setName?>/wbN.png" alt="Black Knight" title="Black Knight" />
+            <img id="bR" class="draggable" src="<?=$setName?>/wbR.png" alt="Black Rook" title="Black Rook" />
+            <img id="bP" class="draggable" src="<?=$setName?>/wbP.png" alt="Black Pawn" title="Black Pawn" />
         </div>
         
         <div id="board">
@@ -209,12 +310,12 @@
         </div>
         
         <div id="white-pieces">
-            <img id="wK" class="draggable piece" src="default/wwK.png" alt="White King" title="White King" />
-            <img id="wQ" class="draggable" src="default/wwQ.png" alt="White Queen" title="White Queen" />
-            <img id="wB" class="draggable" src="default/wwB.png" alt="White Bishop" title="White Bishop" />
-            <img id="wN" class="draggable" src="default/wwN.png" alt="White Knight" title="White Knight" />
-            <img id="wR" class="draggable" src="default/wwR.png" alt="White Rook" title="White Rook" />
-            <img id="wP" class="draggable" src="default/wwP.png" alt="White Pawn" title="White Pawn" />
+            <img id="wK" class="draggable" src="<?=$setName?>/wwK.png" alt="White King" title="White King" />
+            <img id="wQ" class="draggable" src="<?=$setName?>/wwQ.png" alt="White Queen" title="White Queen" />
+            <img id="wB" class="draggable" src="<?=$setName?>/wwB.png" alt="White Bishop" title="White Bishop" />
+            <img id="wN" class="draggable" src="<?=$setName?>/wwN.png" alt="White Knight" title="White Knight" />
+            <img id="wR" class="draggable" src="<?=$setName?>/wwR.png" alt="White Rook" title="White Rook" />
+            <img id="wP" class="draggable" src="<?=$setName?>/wwP.png" alt="White Pawn" title="White Pawn" />
         </div>
     
     </div>
