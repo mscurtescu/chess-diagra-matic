@@ -110,6 +110,13 @@
         {
             border: 1px solid red;
         }
+        
+        #position-editor
+        {
+            padding: 1em 0 0 3em;
+            display: none;
+        }
+        
     </style>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/iutil.js"></script>
@@ -118,18 +125,19 @@
     <script type="text/javascript">
     var movingNow;
     
-    function pieceDropped(drag)
+    function movePieceToCell(piece, cell)
     {
-        var imgSelector = "#" + this.id + " img";
+        var imgSelector = "#" + cell.id + " img";
+        
         $(imgSelector).remove();
         
-        var imgTag = "<img class='draggable' src='" + drag.src + "' alt='" + drag.alt + "' title='" + drag.title + "' />";
+        var imgTag = "<img class='draggable' src='" + piece.src + "' alt='" + piece.alt + "' title='" + piece.title + "' />";
         
-        $(this).append(imgTag);
+        $(cell).append(imgTag);
         
-        if (drag.id == "")
+        if (piece.id == "")
         {
-            $(drag).remove();
+            $(piece).remove();
         }
         
         $(imgSelector).Draggable(
@@ -139,6 +147,11 @@
                 onStop:  pieceMoveStopped
             }
         );
+    }
+    
+    function pieceDropped(drag)
+    {
+        movePieceToCell(drag, this);
         
         movingNow = null;
     }
@@ -202,6 +215,80 @@
             }
         }
     );
+    
+    function clearBoard()
+    {
+        for (row = 8; row >= 1; row--)
+        {
+            for (col = 'a'; col <= 'h'; col = String.fromCharCode(col.charCodeAt(0) + 1))
+            {
+                var cellId = '#' + col + row;
+                
+                $(cellId + ' img').remove();
+            }
+        }
+    }
+    
+    function resetBoard()
+    {
+        doEnterPositions(
+            "Ra1,Nb1,Bc1,Qd1,Ke1,Bf1,Ng1,Rh1,Pa2,Pb2,Pc2,Pd2,Pe2,Pf2,Pg2,Ph2",
+            "Ra8,Nb8,Bc8,Qd8,Ke8,Bf8,Ng8,Rh8,Pa7,Pb7,Pc7,Pd7,Pe7,Pf7,Pg7,Ph7"
+        );
+    }
+    
+    function toggleEnterPositions()
+    {
+        $('#position-editor').slideToggle('fast');
+    }
+    
+    function enterPositions()
+    {
+        doEnterPositions(
+            $('#position-editor > input[@name=w]').val(),
+            $('#position-editor > input[@name=b]').val()
+        );
+        
+        $('#position-editor > input[@name=w]').val('');
+        $('#position-editor > input[@name=b]').val('');
+        
+        toggleEnterPositions();
+    }
+    
+    function doEnterPositions(white, black)
+    {
+        clearBoard();
+        
+        doEnterPositionsColor(white.split(','), 'w');
+        doEnterPositionsColor(black.split(','), 'b');
+    }
+    
+    function doEnterPositionsColor(positions, color)
+    {
+        for (i = 0; i < positions.length; i++)
+        {
+            var pieceId;
+            var cellId;
+            
+            if (positions[i].length == 2)
+            {
+                pieceId = 'P';
+                cellId = positions[i];
+            }
+            else if (positions[i].length == 3)
+            {
+                pieceId = positions[i].charAt(0);
+                cellId = positions[i].substr(1);
+            }
+            else
+                continue;
+            
+            if (pieceId != 'X' && pieceId != 'O')
+                pieceId = color + pieceId;
+            
+            movePieceToCell($('#'+pieceId)[0], $('#'+cellId)[0]);
+        }
+    }
     
     function readPositions()
     {
@@ -352,7 +439,16 @@
     <form id="get-image-form" action="chessdiagram.php" method="get">
         <input type="hidden" name="w" value="Kd5,Be3,g6" />
         <input type="hidden" name="b" value="Kf8,e7,h7" />
-        <input type="submit" value="Get Image" onClick="readPositions()" />
+        <button type="button" onclick="clearBoard()"><img src="images/clear.png"/> Clear</button>
+        <button type="button" onclick="resetBoard()"><img src="images/reset.png"/> Reset</button>
+        <button type="button" onclick="toggleEnterPositions()"><img src="images/enter.png"/> Enter</button>
+        <button type="submit" onclick="readPositions()"><img src="images/get.png"/> Get Image</button>
+    </form>
+    
+    <form id="position-editor">
+        White: <input type="text" name="w" value=""/> <br />
+        Black: <input type="text" name="b" value=""/> <br />
+        <button type="button" onclick="enterPositions()">Enter</button>
     </form>
     
 </body>
