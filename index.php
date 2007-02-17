@@ -5,8 +5,9 @@
     <?php
     require('chessset.php');
     
-    $setName = 'default';
+    $setName = 'cheq';
     $set = new ChessSet($setName);
+    $setFolder = 'sets/' . $setName;
     ?>
     <style type="text/css">
         #white-pieces
@@ -58,7 +59,7 @@
             margin: 0;
             width: <?=$set->getBoardWidth()?>px;
             height: <?=$set->getBoardWidth()?>px;
-            background-image: url(<?=$setName?>/board.png);
+            background-image: url(<?=$setFolder?>/board.png);
         }
         
 <?php
@@ -127,7 +128,7 @@
         var imgSelector = "#" + this.id + " img";
         $(imgSelector).remove();
         
-        var imgTag = "<img class='draggable' src='" + getCellImgSrc(this.id, drag.src) + "' alt='" + drag.alt + "' title='" + drag.title + "' />";
+        var imgTag = "<img class='draggable' src='" + drag.src + "' alt='" + drag.alt + "' title='" + drag.title + "' />";
         
         $(this).append(imgTag);
         
@@ -227,12 +228,12 @@
     <div id="drag-drop-area">
         
         <div id="black-pieces">
-            <img id="bK" class="draggable" src="<?=$setName?>/wbK.png" alt="Black King" title="Black King" />
-            <img id="bQ" class="draggable" src="<?=$setName?>/wbQ.png" alt="Black Queen" title="Black Queen" />
-            <img id="bB" class="draggable" src="<?=$setName?>/wbB.png" alt="Black Bishop" title="Black Bishop" />
-            <img id="bN" class="draggable" src="<?=$setName?>/wbN.png" alt="Black Knight" title="Black Knight" />
-            <img id="bR" class="draggable" src="<?=$setName?>/wbR.png" alt="Black Rook" title="Black Rook" />
-            <img id="bP" class="draggable" src="<?=$setName?>/wbP.png" alt="Black Pawn" title="Black Pawn" />
+            <img id="bK" class="draggable" src="<?=$setFolder?>/bK.png" alt="Black King" title="Black King" />
+            <img id="bQ" class="draggable" src="<?=$setFolder?>/bQ.png" alt="Black Queen" title="Black Queen" />
+            <img id="bB" class="draggable" src="<?=$setFolder?>/bB.png" alt="Black Bishop" title="Black Bishop" />
+            <img id="bN" class="draggable" src="<?=$setFolder?>/bN.png" alt="Black Knight" title="Black Knight" />
+            <img id="bR" class="draggable" src="<?=$setFolder?>/bR.png" alt="Black Rook" title="Black Rook" />
+            <img id="bP" class="draggable" src="<?=$setFolder?>/bP.png" alt="Black Pawn" title="Black Pawn" />
         </div>
         
         <div id="board">
@@ -310,12 +311,12 @@
         </div>
         
         <div id="white-pieces">
-            <img id="wK" class="draggable" src="<?=$setName?>/wwK.png" alt="White King" title="White King" />
-            <img id="wQ" class="draggable" src="<?=$setName?>/wwQ.png" alt="White Queen" title="White Queen" />
-            <img id="wB" class="draggable" src="<?=$setName?>/wwB.png" alt="White Bishop" title="White Bishop" />
-            <img id="wN" class="draggable" src="<?=$setName?>/wwN.png" alt="White Knight" title="White Knight" />
-            <img id="wR" class="draggable" src="<?=$setName?>/wwR.png" alt="White Rook" title="White Rook" />
-            <img id="wP" class="draggable" src="<?=$setName?>/wwP.png" alt="White Pawn" title="White Pawn" />
+            <img id="wK" class="draggable" src="<?=$setFolder?>/wK.png" alt="White King" title="White King" />
+            <img id="wQ" class="draggable" src="<?=$setFolder?>/wQ.png" alt="White Queen" title="White Queen" />
+            <img id="wB" class="draggable" src="<?=$setFolder?>/wB.png" alt="White Bishop" title="White Bishop" />
+            <img id="wN" class="draggable" src="<?=$setFolder?>/wN.png" alt="White Knight" title="White Knight" />
+            <img id="wR" class="draggable" src="<?=$setFolder?>/wR.png" alt="White Rook" title="White Rook" />
+            <img id="wP" class="draggable" src="<?=$setFolder?>/wP.png" alt="White Pawn" title="White Pawn" />
         </div>
     
     </div>

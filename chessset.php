@@ -9,7 +9,7 @@ class ChessSet
     
     function ChessSet($setFolder = 'default')
     {
-        $this->folder = $setFolder . '/';
+        $this->folder = 'sets/' . $setFolder . '/';
         
         $this->info = parse_ini_file($this->folder . "set.info");
     }
