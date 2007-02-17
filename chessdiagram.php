@@ -13,6 +13,7 @@ parsePieces($blacks, 'b', $board);
 $set = new ChessSet();
 
 header("Content-type: image/png");
+header('Content-Disposition: attachment; filename="chess-diagra-matic.png"');
 
 imagepng(placePieces($board, $set));
 
