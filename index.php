@@ -51,6 +51,13 @@
         }
         
 <?php } ?>
+
+        #O, #X
+        {
+            position: absolute;
+            top: 0;
+            left: <?=$set->getMarginLeft() + $set->getSquareSize() * 7?>px;
+        }
         
         #board
         {
@@ -111,18 +118,6 @@
     <script type="text/javascript">
     var movingNow;
     
-    function getCellImgSrc(cellId, pieceSrc)
-    {
-        var row = parseInt(cellId[1]);
-        var col = cellId.charCodeAt(0) - "a".charCodeAt(0) + 1;
-        
-        var background = (col + row) % 2 == 1 ? 'w' : 'b';
-        
-        var backgroundPos = pieceSrc.length - 7;
-        
-        return pieceSrc.substring(0, backgroundPos) + background + pieceSrc.substring(backgroundPos + 1);
-    }
-    
     function pieceDropped(drag)
     {
         var imgSelector = "#" + this.id + " img";
@@ -165,7 +160,7 @@
 	function()
 	{
             var colorCodes = new Array('b', 'w');
-            var pieceCodes = new Array('K', 'Q', 'B', 'N', 'R', 'P');
+            var pieceCodes = new Array('K', 'Q', 'B', 'N', 'R', 'P', 'O', 'X');
             
             for (i = 0; i < colorCodes.length; i++)
             {
@@ -174,7 +169,12 @@
                 for (j = 0; j < pieceCodes.length; j++)
                 {
                     var pieceCode = pieceCodes[j];
-                    var pieceId = '#' + colorCode + pieceCode;
+                    var pieceId;
+                    
+                    if (pieceCode == 'O' || pieceCode == 'X')
+                        pieceId = '#' + pieceCode;
+                    else
+                        pieceId = '#' + colorCode + pieceCode;
                     
                     $(pieceId).Draggable(
                         {
@@ -202,28 +202,52 @@
             }
         }
     );
+    
+    function readPositions()
+    {
+        var whites = '';
+        var blacks = '';
+        
+        for (row = 8; row >= 1; row--)
+        {
+            for (col = 'a'; col <= 'h'; col = String.fromCharCode(col.charCodeAt(0) + 1))
+            {
+                var cellId = '#' + col + row;
+                
+                var imgs = $(cellId + ' > img')
+                if (imgs.length > 0)
+                {
+                    imgSrc = imgs[0].src;
+                    piece = imgSrc.charAt(imgSrc.length - 5);
+                    color = imgSrc.charAt(imgSrc.length - 6);
+                    
+                    if (color == 'w')
+                    {
+                        whites = whites + ',' + piece + col + row
+                    }
+                    else
+                    {
+                        blacks = blacks + ',' + piece + col + row
+                    }
+                }
+            }
+        }
+        
+        if (whites.length > 0)
+            whites = whites.substr(1);
+        
+        if (blacks.length > 0)
+            blacks = blacks.substr(1);
+        
+        $('#get-image-form > input[@name=w]').val(whites);
+        $('#get-image-form > input[@name=b]').val(blacks);
+        
+        return true;
+    }
     </script>
 </head>
 
 <body>
-    
-    <h1>Chess-Diagra-Matic</h1>
-    
-    <form action="chessdiagram.php" method="get">
-        <table>
-            <tr>
-                <td>White</td>
-                <td><input type="text" name="w" value="Kd5,Be3,g6" /></td>
-            </tr>
-            <tr>
-                <td>Black</td>
-                <td><input type="text" name="b" value="Kf8,e7,h7" /></td>
-            </tr>
-        </table>
-        <input type="submit" value="Get Image" />
-    </form>
-    
-    <h1>Drag-and-Drop</h1>
     
     <div id="drag-drop-area">
         
@@ -234,6 +258,7 @@
             <img id="bN" class="draggable" src="<?=$setFolder?>/bN.png" alt="Black Knight" title="Black Knight" />
             <img id="bR" class="draggable" src="<?=$setFolder?>/bR.png" alt="Black Rook" title="Black Rook" />
             <img id="bP" class="draggable" src="<?=$setFolder?>/bP.png" alt="Black Pawn" title="Black Pawn" />
+            <img id="O" class="draggable" src="<?=$setFolder?>/O.png" alt="Marker - disc" title="Marker - disc" />
         </div>
         
         <div id="board">
@@ -317,9 +342,18 @@
             <img id="wN" class="draggable" src="<?=$setFolder?>/wN.png" alt="White Knight" title="White Knight" />
             <img id="wR" class="draggable" src="<?=$setFolder?>/wR.png" alt="White Rook" title="White Rook" />
             <img id="wP" class="draggable" src="<?=$setFolder?>/wP.png" alt="White Pawn" title="White Pawn" />
+            <img id="X" class="draggable" src="<?=$setFolder?>/X.png" alt="Marker - cross" title="Marker - cross" />
         </div>
     
     </div>
+    
+    <p>&nbsp;</p>
+    
+    <form id="get-image-form" action="chessdiagram.php" method="get">
+        <input type="hidden" name="w" value="Kd5,Be3,g6" />
+        <input type="hidden" name="b" value="Kf8,e7,h7" />
+        <input type="submit" value="Get Image" onClick="readPositions()" />
+    </form>
     
 </body>
 </html>

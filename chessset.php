@@ -7,9 +7,9 @@ class ChessSet
     var $folder;
     var $info;
     
-    function ChessSet($setFolder = 'default')
+    function ChessSet($setName = 'default')
     {
-        $this->folder = 'sets/' . $setFolder . '/';
+        $this->folder = 'sets/' . $setName . '/';
         
         $this->info = parse_ini_file($this->folder . "set.info");
     }
@@ -26,9 +26,27 @@ class ChessSet
     
     function getPiece($code, $color, $background)
     {
+        $code = strtoupper($code);
+        $color = strtolower($color);
+        $background = strtolower($background);
+        
+        if ($code == 'X' || $code == 'O')
+            $color = 'x';
+        
+        if ($this->isTransparent())
+            $background = 'x';
+        
         if (!isset($pieces[$code][$color][$background]))
         {
-            $filename = $this->folder . strtolower($background . $color) . strtoupper($code) . '.png';
+            $filename = $this->folder;
+            
+            if ($background != 'x')
+                $filename .= $background;
+            
+            if ($color != 'x')
+                $filename .= $color;
+                
+            $filename .= $code . '.png';
             
             $pieces[$code][$color][$background] = imagecreatefrompng($filename);
         }
@@ -69,6 +87,11 @@ class ChessSet
     function getBoardHeight()
     {
         return $this->getMarginTop() + $this->getSquareSize() * 8 + $this->getMarginBottom();
+    }
+    
+    function isTransparent()
+    {
+        return $this->info['transparent'] == 'yes';
     }
 }
 

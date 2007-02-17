@@ -61,15 +61,45 @@ function placePieces($board, $set)
                 $color = substr($board[$row][$col], 0, 1);
                 $code  = substr($board[$row][$col], 1, 1);
                 
-                imagecopy(
-                    $boardImg,
-                    $set->getPiece($code, $color, $background),
-                    $offx,
-                    $offy,
-                    0,
-                    0,
-                    $size,
-                    $size);
+                if ($set->isTransparent())
+                {
+                    $pieceImg = $set->getPiece($code, $color, $background);
+                    
+                    $pieceImgTrueColor = imagecreatetruecolor($size, $size);
+                    
+                    imagecopy(
+                        $pieceImgTrueColor,
+                        $pieceImg,
+                        0,
+                        0,
+                        0,
+                        0,
+                        $size,
+                        $size);
+                    
+                    imagecolortransparent($pieceImgTrueColor, imagecolorat($pieceImgTrueColor, 0, 0));
+                    
+                    imagecopymerge(
+                        $boardImg,
+                        $pieceImgTrueColor,
+                        $offx,
+                        $offy,
+                        0,
+                        0,
+                        $size,
+                        $size,
+                        100);
+                }
+                else
+                    imagecopy(
+                        $boardImg,
+                        $set->getPiece($code, $color, $background),
+                        $offx,
+                        $offy,
+                        0,
+                        0,
+                        $size,
+                        $size);
             }
             
             $background = $background == 'w' ? 'b' : 'w';
